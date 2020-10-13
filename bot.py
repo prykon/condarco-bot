@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 
 # setup logging
 logger = logging.getLogger('discord')
+logger.setLevel(logging.INFO)
 handler = logging.FileHandler(filename='discord.log', mode='w', encoding='utf-8')
 handler.setFormatter(logging.Formatter('%(asctime)s : %(levelname)s : %(name)s > %(message)s'))
 logger.addHandler(handler)
@@ -21,12 +22,12 @@ client = discord.Client()
 
 @client.event
 async def on_ready():
-    print(f'{client.user.name} has connected to Discord!')
+    logger.info(f'{client.user.name} has connected to Discord!')
     for guild in client.guilds:
         if guild.name == GUILD:
             break
 
-    print(
+    logger.info(
         f'{client.user} is connected to the following guild:\n'
         f'{guild.name}(id: {guild.id})'
     )
