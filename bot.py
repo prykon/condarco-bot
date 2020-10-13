@@ -1,8 +1,15 @@
 # bot.py
 import os, random, requests
+import logging
 
 import discord
 from dotenv import load_dotenv
+
+# setup logging
+logger = logging.getLogger('discord')
+handler = logging.FileHandler(filename='discord.log', mode='w', encoding='utf-8')
+handler.setFormatter(logging.Formatter('%(asctime)s : %(levelname)s : %(name)s > %(message)s'))
+logger.addHandler(handler)
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -10,6 +17,7 @@ GUILD = os.getenv('DISCORD_GUILD')
 
 
 client = discord.Client()
+
 
 @client.event
 async def on_ready():
