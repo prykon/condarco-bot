@@ -7,6 +7,8 @@ from discord.ext import commands
 
 from dotenv import load_dotenv
 
+import json
+import itertools
 
 # setup logging
 logger = logging.getLogger('discord')
@@ -46,7 +48,7 @@ async def on_member_join(member):
     )
 
 
-@client.event
+# @client.event
 async def on_message(message):
     if message.author == client.user:
         return
@@ -69,12 +71,23 @@ async def on_message(message):
 
 
 @client.command()
-async def versiculo(context):
+async def versiculo(context, libro, capitulo, inicio, fin, version='RVR1960'):
     the_one_true_versicle = '```Porque de tal manera amo Dios al mundo que ha dado a su hijo unigénito, ' \
                             'para que todo aquel que en él cree no se pierda, mas tenga vida eterna.```'
 
-    logger.info(f'Se pidio un versiculo con los argumentos {context.args}')
-    await context.send(the_one_true_versicle)
+    url = 'http://getbible.net/json'
+    search = f'{libro} {capitulo}:{inicio}-{fin}'
+    r = requests.get(url=url, params={'passage': search, 'version': version})
+
+    data = dict(json.loads(r.text[1:-2]))
+    logger.info(f"la daata {data['book'][0]['chapter'].values()}")
+    xs = [ch['verse'] for ch in data['book'][0]['chapter'].values()]
+
+    verses = ''
+    for v in xs:
+        verses += v
+
+    await context.send(verses)
 
 
 client.run(TOKEN)
