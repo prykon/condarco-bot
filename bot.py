@@ -23,7 +23,7 @@ client = discord.Client()
 async def on_ready():
     logger.info(f'{client.user.name} has connected to Discord!')
 
-    guild = discord.utils.find(lambda g: str(g.id) == GUILD, client.guilds)
+    guild = discord.utils.get(client.guilds, id=int(GUILD))
 
     if guild is None:
         logger.warning(f'Could not find the expected guild for {client.user}')
