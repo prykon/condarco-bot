@@ -3,7 +3,10 @@ import os, random, requests
 import logging
 
 import discord
+from discord.ext import commands
+
 from dotenv import load_dotenv
+
 
 # setup logging
 logger = logging.getLogger('discord')
@@ -16,7 +19,7 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 
-client = discord.Client()
+client = commands.Bot(command_prefix='..', case_insensitive=True)
 
 
 @client.event
@@ -63,5 +66,15 @@ async def on_message(message):
     if any(ot in message.content for ot in orando_triggers):
         response = random.choice(orando)
         await message.channel.send(response)
+
+
+@client.command()
+async def versiculo(context):
+    the_one_true_versicle = '```Porque de tal manera amo Dios al mundo que ha dado a su hijo unigénito, ' \
+                            'para que todo aquel que en él cree no se pierda, mas tenga vida eterna.```'
+
+    logger.info(f'Se pidio un versiculo con los argumentos {context.args}')
+    await context.send(the_one_true_versicle)
+
 
 client.run(TOKEN)
