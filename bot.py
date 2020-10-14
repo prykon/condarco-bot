@@ -16,20 +16,22 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 
-
 client = discord.Client()
 
 
 @client.event
 async def on_ready():
     logger.info(f'{client.user.name} has connected to Discord!')
-    for guild in client.guilds:
-        if guild.name == GUILD:
-            break
+
+    guild = discord.utils.find(lambda g: str(g.id) == GUILD, client.guilds)
+
+    if guild is None:
+        logger.warning(f'Could not find the expected guild for {client.user}')
+        return
 
     logger.info(
         f'{client.user} is connected to the following guild:\n'
-        f'{guild.name}(id: {guild.id})'
+        f'{guild.name} (id: {guild.id})'
     )
 
 
